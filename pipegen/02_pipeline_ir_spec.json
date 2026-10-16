@@ -1,0 +1,129 @@
+{
+  "pipeline_name": "workplace_safety_sentinel",
+  "version": "1.0.0",
+  "target_framework": "deepstream-6.4",
+  "target_hardware": ["x86_64_nvidia_gpu", "jetson_orin_jetpack6"],
+  "nodes": [
+    {
+      "id": "source_0",
+      "type": "source",
+      "plugin": "v4l2src",
+      "properties": {
+        "device": "/dev/video0",
+        "caps": "video/x-raw, width=1920, height=1080, framerate=30/1"
+      },
+      "fallback": {
+        "plugin": "filesrc",
+        "location": "/home/safety_surveillance_feed.mp4"
+      }
+    },
+    {
+      "id": "streammux",
+      "type": "muxer",
+      "plugin": "nvstreammux",
+      "properties": {
+        "batch-size": 1,
+        "width": 1920,
+        "height": 1080,
+        "batched-push-timeout": 33333,
+        "live-source": 1
+      }
+    },
+    {
+      "id": "primary_infer",
+      "type": "inference_engine",
+      "plugin": "nvinfer",
+      "properties": {
+        "config-file-path": "deepstream/configs/config_infer_primary_yolo.txt",
+        "model_type": "YOLOv8_PPE_Sentinel",
+        "precision": ["FP16", "INT8"],
+        "batch_size": 1,
+        "gpu_id": 0,
+        "network_mode": 1
+      }
+    },
+    {
+      "id": "tracker",
+      "type": "tracker",
+      "plugin": "nvtracker",
+      "properties": {
+        "ll-lib-file": "/opt/nvidia/deepstream/deepstream/lib/libnvds_nvmultiobjecttracker.so",
+        "ll-config-file": "/opt/nvidia/deepstream/deepstream/samples/configs/deepstream-app/config_tracker_NvDCF_perf.yml",
+        "tracker-width": 960,
+        "tracker-height": 540,
+        "enable-batch-process": 1
+      }
+    },
+    {
+      "id": "safety_analytics_probe",
+      "type": "custom_probe",
+      "plugin": "python_pad_probe",
+      "location": "deepstream/probes/hazard_zone_probe.py",
+      "properties": {
+        "hazard_zones": [
+          {
+            "zone_id": "ZONE_DANGER_ROBOTIC_CELL",
+            "type": "RESTRICTED",
+            "polygon": [[580, 420], [1340, 420], [1480, 980], [440, 980]],
+            "action": "IMMEDIATE_ALERT"
+          },
+          {
+            "zone_id": "ZONE_CAUTION_FORKLIFT_LANE",
+            "type": "PPE_MANDATORY",
+            "polygon": [[100, 300], [500, 300], [400, 950], [50, 950]],
+            "action": "PPE_CHECK"
+          }
+        ],
+        "dwell_threshold_seconds": 3.0,
+        "required_ppe": ["hardhat", "safety-vest"]
+      }
+    },
+    {
+      "id": "osd",
+      "type": "visualizer",
+      "plugin": "nvdsosd",
+      "properties": {
+        "process-mode": 2,
+        "display-text": 1,
+        "display-bbox": 1,
+        "display-mask": 1
+      }
+    },
+    {
+      "id": "output_actionable_sinks",
+      "type": "composite_sink",
+      "sinks": [
+        {
+          "type": "display",
+          "plugin": "nveglglessink",
+          "properties": { "sync": 0 }
+        },
+        {
+          "type": "mqtt_message_broker",
+          "plugin": "nvmsgconv_and_broker",
+          "properties": {
+            "proto-lib": "/opt/nvidia/deepstream/deepstream/lib/libnvds_mqtt_proto.so",
+            "conn-str": "localhost;1883;workplace/safety/alerts",
+            "config": "deepstream/configs/msg_conv_config.txt"
+          }
+        },
+        {
+          "type": "json_incident_logger",
+          "plugin": "file_append_logger",
+          "properties": {
+            "output_path": "/home/incidents.jsonl",
+            "format": "JSONL"
+          }
+        }
+      ]
+    }
+  ],
+  "links": [
+    ["source_0", "streammux"],
+    ["streammux", "primary_infer"],
+    ["primary_infer", "tracker"],
+    ["tracker", "safety_analytics_probe"],
+    ["safety_analytics_probe", "osd"],
+    ["osd", "output_actionable_sinks"]
+  ]
+}

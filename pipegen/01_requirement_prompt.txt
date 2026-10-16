@@ -1,0 +1,40 @@
+================================================================================
+CRAFTIFAI PIPEGEN v0.5.1 - STAGE 1: REQUIREMENT SPECIFICATION
+================================================================================
+Project: SafetySentinel AI 🦺
+Hackathon: HackWithBangalore 4.0 | Track: PipeGen (Perception)
+Target Hardware: Linux x86_64 with NVIDIA GPU (or NVIDIA Jetson Orin with JetPack 6)
+Acceleration: NVIDIA TensorRT Engine (FP16 / INT8)
+Streaming Framework: NVIDIA DeepStream 6.4 / 7.0
+Input Source: Video File (/home/video.mp4), USB Camera (/dev/video0), or RTSP
+Actionable Output: Structured JSON incident logging (/home/incidents.jsonl) & MQTT Stream
+
+--------------------------------------------------------------------------------
+PROMPT TO ENTER INTO CRAFTIFAI PIPEGEN (STAGE 1):
+--------------------------------------------------------------------------------
+"Build an edge AI computer vision pipeline for industrial worker safety named
+SafetySentinel AI.
+
+The pipeline monitors an industrial video feed (USB camera, RTSP stream, or
+local surveillance MP4) at 1080p resolution.
+
+Process workflow:
+1. Ingest camera video frames through nvstreammux at 1920x1080 resolution, 30 FPS.
+2. Run an object detection model compiled into a high-performance TensorRT engine
+   (optimized with FP16 and INT8 quantization) to detect 'person', 'hardhat',
+   and 'no-hardhat' with high inference throughput (>60 FPS).
+3. Assign consistent tracking IDs across frames using nvtracker (NvDCF tracker).
+4. Apply a custom safety assessment probe to associate detected helmets with
+   detected workers:
+   a. Compute spatial intersection between the upper head-region of each worker
+      bounding box and detected helmet bounding boxes.
+   b. If a worker has no associated helmet detected, flag a potential helmet violation.
+   c. If a worker enters a designated restricted hazard zone, flag an immediate zone breach.
+5. Annotate video frames with color-coded bounding boxes and labels via nvdsosd.
+6. Generate actionable safety outputs beyond screen displays:
+   a. Write structured JSON incident records to '/home/incidents.jsonl' containing
+      timestamp, camera_id, worker_id, event_type, confidence, and bounding box.
+   b. Publish real-time alert events to MQTT broker on topic 'workplace/safety/alerts'.
+   c. Stream system performance telemetry (FPS, inference latency) to drive an
+      external operations dashboard."
+--------------------------------------------------------------------------------

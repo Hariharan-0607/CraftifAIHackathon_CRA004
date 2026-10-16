@@ -1,0 +1,25 @@
+================================================================================
+CRAFTIFAI PIPEGEN v0.5.1 - STAGE 3: MODEL SPECIFICATION
+================================================================================
+Target Model: YOLOv8s-PPE (Personal Protective Equipment & Worker Sentinel)
+Architecture: YOLOv8 / YOLOv10 Edge Vision Detector
+Format: ONNX (Opset 12 / 17, Dynamic or Static batch)
+Input Resolution: 640x640x3 (RGB, normalized 0.0 to 1.0)
+Classes (5 Classes):
+  0: person
+  1: hardhat
+  2: no-hardhat
+  3: safety-vest
+  4: no-vest
+
+Source Locations in PipeGen:
+- PipeGen Catalog: Models -> Industrial Vision -> YOLOv8-Safety-PPE-640
+- Or Deep Search query in PipeGen: "yolov8 person ppe hardhat vest onnx"
+- Model Weight File: /home/models/yolov8s_ppe_640.onnx
+
+Inference Engine Configurations:
+- Primary Engine File: /home/models/yolov8s_ppe_640_fp16.engine
+- Quantized INT8 Engine File: /home/models/yolov8s_ppe_640_int8.engine
+- Calibration Dataset: 100 sample factory surveillance frames (/home/calib_data/)
+- Output Layers:
+  - Output 0: [1, 9, 8400] (Bounding boxes [cx, cy, w, h] + 5 class confidence scores)

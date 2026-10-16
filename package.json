@@ -1,0 +1,24 @@
+{
+  "name": "workplace-safety-sentinel",
+  "version": "1.0.0",
+  "description": "CraftifAI PipeGen Track A - Edge Physical AI Workplace Safety Sentinel with DeepStream, TensorRT, MQTT, and Live Operations Dashboard",
+  "main": "dashboard/server.js",
+  "scripts": {
+    "start": "node dashboard/server.js",
+    "dev": "node dashboard/server.js"
+  },
+  "keywords": [
+    "pipegen",
+    "physical-ai",
+    "deepstream",
+    "tensorrt",
+    "workplace-safety",
+    "mqtt",
+    "edge-ai"
+  ],
+  "author": "Hackathon Team",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

@@ -1,0 +1,13 @@
+[sensor0]
+enable=1
+type=camera
+id=CAM_FACILITY_BAY_01
+location=Factory_Floor_East_Bay
+description=Workplace Safety Sentinel Primary Camera
+
+[place0]
+enable=1
+id=SITE_SF_HQ
+name=San Francisco Physical AI Manufacturing Bay
+type=building
+coordinate=37.7749;-122.4194;10.0
