@@ -24,7 +24,7 @@
   --font-mono: 'JetBrains Mono', monospace;
 
   --sidebar-width-expanded: 240px;
-  --sidebar-width-collapsed: 68px;
+  --sidebar-width-collapsed: 72px;
 
   --radius-xs: 4px;
   --radius-sm: 6px;
@@ -268,7 +268,7 @@ body.app-layout {
 }
 
 /* ==============================================================================
-   COLLAPSED SIDEBAR STATE (Compact Icon Mode)
+   COLLAPSED SIDEBAR STATE (Compact Icon Dock) - ZERO OVERLAP, PIXEL PERFECT
    ============================================================================== */
 .persistent-sidebar.sidebar-collapsed {
   width: var(--sidebar-width-collapsed);
@@ -279,21 +279,96 @@ body.app-layout {
 .persistent-sidebar.sidebar-collapsed .nav-label,
 .persistent-sidebar.sidebar-collapsed .nav-badge-count,
 .persistent-sidebar.sidebar-collapsed .edge-status-info {
-  display: none;
+  display: none !important;
+}
+
+/* Header in collapsed mode: Monogram is centered with zero overlap */
+.persistent-sidebar.sidebar-collapsed .sidebar-header {
+  padding: 0;
+  justify-content: center;
+  position: relative;
+}
+
+.persistent-sidebar.sidebar-collapsed .sidebar-brand-box {
+  justify-content: center;
+  width: 100%;
+}
+
+.persistent-sidebar.sidebar-collapsed .brand-monogram {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.persistent-sidebar.sidebar-collapsed .brand-monogram:hover {
+  transform: scale(1.08);
+}
+
+/* Floating expand pill toggle placed neatly on the right edge */
+.persistent-sidebar.sidebar-collapsed .btn-sidebar-collapse {
+  position: absolute;
+  right: -13px;
+  top: 19px;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  background: #000000;
+  border: 1px solid var(--mono-border-light);
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+  z-index: 300;
+}
+
+.persistent-sidebar.sidebar-collapsed .btn-sidebar-collapse:hover {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+  transform: scale(1.1);
 }
 
 .persistent-sidebar.sidebar-collapsed .collapse-icon {
   transform: rotate(180deg);
 }
 
+/* Navigation items in collapsed mode: Uniform 44x44 centered tiles */
+.persistent-sidebar.sidebar-collapsed .sidebar-nav {
+  padding: 16px 0;
+  align-items: center;
+  gap: 8px;
+}
+
 .persistent-sidebar.sidebar-collapsed .nav-item-btn {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  padding: 0;
+  margin: 0 auto;
   justify-content: center;
-  padding: 10px;
+  border-radius: var(--radius-sm);
+}
+
+.persistent-sidebar.sidebar-collapsed .nav-icon {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  margin: 0;
+}
+
+.persistent-sidebar.sidebar-collapsed .sidebar-footer {
+  padding: 12px 0;
+  display: flex;
+  justify-content: center;
 }
 
 .persistent-sidebar.sidebar-collapsed .edge-status-card {
+  width: 42px;
+  height: 42px;
+  padding: 0;
   justify-content: center;
-  padding: 8px 0;
+  border-radius: var(--radius-sm);
 }
 
 /* ==============================================================================

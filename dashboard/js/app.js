@@ -406,10 +406,25 @@ function setupEventListeners() {
   // 1. Persistent Sidebar Collapse Toggle
   const sidebar = document.getElementById('app-sidebar');
   const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
-  btnToggleSidebar.addEventListener('click', () => {
+  const brandBox = document.querySelector('.sidebar-brand-box');
+
+  const toggleSidebarFn = () => {
     appState.sidebarCollapsed = !appState.sidebarCollapsed;
     sidebar.classList.toggle('sidebar-collapsed', appState.sidebarCollapsed);
+  };
+
+  btnToggleSidebar.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleSidebarFn();
   });
+
+  if (brandBox) {
+    brandBox.addEventListener('click', () => {
+      if (appState.sidebarCollapsed) {
+        toggleSidebarFn();
+      }
+    });
+  }
 
   // 2. Navigation items
   document.querySelectorAll('[data-nav-target]').forEach(item => {
