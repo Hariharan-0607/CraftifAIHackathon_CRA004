@@ -3,210 +3,366 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SafetySentinel AI | Minimalist Physical AI</title>
-  <meta name="description" content="Minimalist Edge AI Safety System with CraftifAI PipeGen, NVIDIA DeepStream, and TensorRT.">
+  <title>SafetySentinel AI | Industrial Physical AI Operations</title>
+  <meta name="description" content="Industrial Edge AI Safety Monitoring with CraftifAI PipeGen, NVIDIA DeepStream, and TensorRT.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="mono-theme">
+<body class="mono-theme app-layout">
 
-  <!-- Minimalist Monochrome Navigation Header -->
-  <header class="mono-header">
-    <div class="header-left">
-      <div class="mono-logo-box">
-        <span>SS</span>
+  <!-- =======================================================================
+       PATTERN 1: PERSISTENT LEFT SIDEBAR (Collapsible to compact icons)
+       ======================================================================= -->
+  <aside class="persistent-sidebar" id="app-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-box">
+        <span class="brand-monogram">SS</span>
+        <div class="brand-text-block">
+          <span class="brand-heading">SafetySentinel</span>
+          <span class="brand-sub">Physical AI</span>
+        </div>
       </div>
-      <div class="brand-titles">
-        <h1 class="brand-title">SafetySentinel <span>AI</span></h1>
-        <span class="brand-meta">CraftifAI PipeGen • Perception Track • HackWithBangalore 4.0</span>
-      </div>
+      <button class="btn-sidebar-collapse" id="btn-toggle-sidebar" title="Collapse Sidebar (Icon Mode)" aria-label="Toggle Sidebar">
+        <svg class="collapse-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
     </div>
 
-    <!-- Segmented Switch Tab Bar (Minimalist B&W) -->
-    <nav class="segmented-switch-bar" role="tablist">
-      <button class="switch-tab active" data-tab-target="page-live" role="tab" aria-selected="true">
-        <span>Live Monitor</span>
+    <!-- Core Navigation Links (Always 1-click away) -->
+    <nav class="sidebar-nav" role="tablist">
+      <div class="nav-group-title">PERCEPTION VIEWS</div>
+
+      <button class="nav-item-btn active" data-nav-target="page-live" title="Live Video Feeds" role="tab" aria-selected="true">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="23 7 16 12 23 17 23 7"></polygon>
+          <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+        </svg>
+        <span class="nav-label">Live Feeds</span>
+        <span class="nav-indicator-dot"></span>
       </button>
-      <button class="switch-tab" data-tab-target="page-incidents" role="tab" aria-selected="false">
-        <span>Incident Logs</span>
-        <span class="switch-badge" id="nav-incident-count">0</span>
+
+      <button class="nav-item-btn" data-nav-target="page-matrix" title="Node Matrix (Edge Cameras)" role="tab" aria-selected="false">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span class="nav-label">Node Matrix</span>
+        <span class="nav-badge-count">3 Nodes</span>
       </button>
-      <button class="switch-tab" data-tab-target="page-benchmarks" role="tab" aria-selected="false">
-        <span>TensorRT Speed</span>
+
+      <button class="nav-item-btn" data-nav-target="page-incidents" title="Incident Audit Logs" role="tab" aria-selected="false">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+        <span class="nav-label">Incident Logs</span>
+        <span class="nav-badge-count" id="sidebar-incident-count">0</span>
       </button>
-      <button class="switch-tab" data-tab-target="page-pipeline" role="tab" aria-selected="false">
-        <span>PipeGen 5-Stage IR</span>
+
+      <div class="nav-group-title">PIPELINE & PROOFS</div>
+
+      <button class="nav-item-btn" data-nav-target="page-benchmarks" title="TensorRT Speed Report" role="tab" aria-selected="false">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        <span class="nav-label">TensorRT Speed</span>
       </button>
-      <button class="switch-tab" data-tab-target="page-hardware" role="tab" aria-selected="false">
-        <span>ESP32 Hardware</span>
+
+      <button class="nav-item-btn" data-nav-target="page-pipeline" title="PipeGen 5-Stage IR Flow" role="tab" aria-selected="false">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="18" cy="5" r="3"></circle>
+          <circle cx="6" cy="12" r="3"></circle>
+          <circle cx="18" cy="19" r="3"></circle>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+        </svg>
+        <span class="nav-label">PipeGen 5-Stage IR</span>
+      </button>
+
+      <button class="nav-item-btn" data-nav-target="page-hardware" title="ESP32 Closed Loop Hardware" role="tab" aria-selected="false">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+          <rect x="9" y="9" width="6" height="6"></rect>
+          <line x1="9" y1="1" x2="9" y2="4"></line>
+          <line x1="15" y1="1" x2="15" y2="4"></line>
+          <line x1="9" y1="20" x2="9" y2="23"></line>
+          <line x1="15" y1="20" x2="15" y2="23"></line>
+        </svg>
+        <span class="nav-label">ESP32 Actuator</span>
       </button>
     </nav>
 
-    <!-- Header Right Controls -->
-    <div class="header-right">
-      <div class="system-status-indicator">
-        <span class="status-dot"></span>
-        <span class="status-label">DEEPSTREAM ACTIVE</span>
-      </div>
-
-      <button class="mono-icon-btn" id="btn-sound-toggle" title="Toggle Alarm Sound" aria-label="Toggle Sound">
-        <svg class="speaker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-        </svg>
-      </button>
-
-      <button class="btn-mono-action" id="btn-demo-breach">
-        TRIGGER TEST BREACH
-      </button>
-    </div>
-  </header>
-
-  <!-- Minimalist Floating Alert Toast -->
-  <aside class="mono-toast" id="mono-toast" style="display: none;">
-    <div class="toast-left">
-      <span class="toast-indicator-symbol">●</span>
-      <div class="toast-text-group">
-        <span class="toast-heading" id="toast-title">ZONE INTRUSION ALERT</span>
-        <span class="toast-subtext" id="toast-desc">Worker entered restricted robotic cell. Emergency stop triggered.</span>
+    <!-- Sidebar Bottom Status -->
+    <div class="sidebar-footer">
+      <div class="edge-status-card">
+        <div class="edge-status-dot"></div>
+        <div class="edge-status-info">
+          <span class="edge-node-title">Jetson Orin 64GB</span>
+          <span class="edge-node-sub">DeepStream 6.4 • MQTT</span>
+        </div>
       </div>
     </div>
-    <button class="btn-toast-close" id="btn-dismiss-toast">DISMISS</button>
   </aside>
 
   <!-- =======================================================================
-       PAGE 1: LIVE MONITOR (Minimalist B&W View)
+       MAIN APPLICATION VIEWPORT
        ======================================================================= -->
-  <main class="page-view active" id="page-live">
-    <div class="mono-grid-layout">
-      
-      <!-- Video Viewport Card -->
-      <section class="mono-card viewport-section">
-        <div class="card-bar">
-          <div class="stream-info-tag">
-            <span class="stream-name">CAM-01 / INDUSTRIAL BAY</span>
-            <span class="stream-res">1920×1080 @ 60 FPS • NVIDIA DeepStream 6.4</span>
-          </div>
-
-          <!-- Switch Tabs for Viewport Controls -->
-          <div class="switch-group-row">
-            <div class="pill-switch-container">
-              <button class="pill-switch-btn active" id="switch-source-sim">Simulated Stream</button>
-              <button class="pill-switch-btn" id="switch-source-cam">Local Webcam</button>
-            </div>
-
-            <div class="toggle-switch-pills">
-              <button class="toggle-pill active" id="btn-toggle-zones">Zones: ON</button>
-              <button class="toggle-pill active" id="btn-toggle-bboxes">Boxes: ON</button>
-            </div>
-          </div>
+  <div class="app-main-content">
+    
+    <!-- =======================================================================
+         PATTERN 2: UNIVERSAL TOP ALERT INTERCEPT BANNER
+         Minimises time-to-response. Deep-links directly into live node view!
+         ======================================================================= -->
+    <div class="universal-alert-intercept" id="universal-alert-intercept" style="display: none;">
+      <div class="intercept-left">
+        <div class="intercept-siren-dot"></div>
+        <div class="intercept-message-box">
+          <span class="intercept-tag">CRITICAL SAFETY BREACH DETECTED</span>
+          <span class="intercept-detail" id="intercept-text">Unauthorized human entered Robotic Cell #01! Cutoff engaged.</span>
         </div>
-
-        <!-- Canvas Container -->
-        <div class="canvas-box">
-          <canvas id="sentinel-canvas" width="1280" height="720"></canvas>
-          <video id="webcam-video" playsinline autoplay muted style="display: none;"></video>
-
-          <!-- Minimalist Floating Overlay -->
-          <div class="floating-hud-corner">
-            <div class="hud-pill">ENGINE: <b>TensorRT INT8</b></div>
-            <div class="hud-pill">LATENCY: <b id="hud-latency">7.8 ms</b></div>
-            <div class="hud-pill">RATE: <b id="hud-fps">60.2 FPS</b></div>
-          </div>
-
-          <div class="floating-legend-corner">
-            <span class="mono-legend-chip">▨ RESTRICTED ZONE (ROBOT CELL)</span>
-            <span class="mono-legend-chip">□ CAUTION ZONE (PPE MANDATORY)</span>
-          </div>
-        </div>
-
-        <!-- 4-Stat Strip -->
-        <div class="mono-stats-strip">
-          <div class="stat-cell">
-            <span class="cell-label">Active Workers</span>
-            <span class="cell-number" id="metric-workers">4</span>
-            <span class="cell-meta">Tracked by NvDCF</span>
-          </div>
-          <div class="stat-cell">
-            <span class="cell-label">Helmet Compliance</span>
-            <span class="cell-number" id="metric-compliance">96.4%</span>
-            <span class="cell-meta">Spatial Head Intersection</span>
-          </div>
-          <div class="stat-cell">
-            <span class="cell-label">Active Breaches</span>
-            <span class="cell-number" id="metric-breaches">0</span>
-            <span class="cell-meta">Zero Tolerance Logic</span>
-          </div>
-          <div class="stat-cell">
-            <span class="cell-label">Actionable Feed</span>
-            <span class="cell-number">MQTT / JSON</span>
-            <span class="cell-meta">workplace/safety/alerts</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Live Event Feed Rail -->
-      <aside class="mono-card side-rail">
-        <div class="card-bar">
-          <span class="rail-heading">Live Incident Stream</span>
-          <span class="rail-status-pill">REAL-TIME</span>
-        </div>
-
-        <div class="rail-feed-list" id="rail-incident-feed">
-          <div class="mono-empty-state" id="rail-empty">
-            <div class="empty-dot">○</div>
-            <span class="empty-text">All zones secure & compliant</span>
-            <span class="empty-sub">Monitoring GStreamer pad probe events</span>
-          </div>
-        </div>
-
-        <div class="rail-bottom-bar">
-          <button class="btn-mono-link" data-tab-target="page-incidents">View Complete Audit Log →</button>
-        </div>
-      </aside>
-
+      </div>
+      <div class="intercept-right">
+        <!-- Deep link intercept button -->
+        <button class="btn-intercept-deeplink" id="btn-intercept-deeplink">
+          <span>INTERCEPT & FOCUS LIVE FEED ➔</span>
+        </button>
+        <button class="btn-intercept-mute" id="btn-intercept-mute">ACKNOWLEDGE</button>
+      </div>
     </div>
-  </main>
 
-  <!-- =======================================================================
-       PAGE 2: INCIDENT LOGS & AUDIT TRAIL
-       ======================================================================= -->
-  <main class="page-view" id="page-incidents">
-    <div class="mono-container">
-      <div class="mono-card table-section">
-        <div class="section-heading-bar">
-          <div>
-            <h2 class="section-title">Incident Audit Trail & JSON Logging</h2>
-            <p class="section-sub">Machine-readable logs written by DeepStream probe to <code>/home/incidents.jsonl</code>.</p>
+    <!-- Minimalist Top Sub-Header -->
+    <header class="app-top-bar">
+      <div class="top-bar-left">
+        <h2 class="view-current-title" id="view-current-title">Live Perception Feed</h2>
+        <span class="view-breadcrumb">SafetySentinel AI / Industrial Plant / Camera 01</span>
+      </div>
+
+      <div class="top-bar-right">
+        <div class="hardware-pill-indicator">
+          <span class="hw-dot"></span>
+          <span>NVIDIA TENSORRT INT8</span>
+        </div>
+
+        <button class="icon-toggle-btn" id="btn-sound-toggle" title="Toggle Siren Audio">
+          <svg class="speaker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        </button>
+
+        <button class="btn-top-trigger" id="btn-demo-breach">
+          SIMULATE HAZARD BREACH
+        </button>
+      </div>
+    </header>
+
+    <!-- Floating Toast (Secondary notification) -->
+    <aside class="mono-toast" id="mono-toast" style="display: none;">
+      <div class="toast-left">
+        <span class="toast-symbol">●</span>
+        <div class="toast-text-group">
+          <span class="toast-heading" id="toast-title">INTRUSION DETECTED</span>
+          <span class="toast-subtext" id="toast-desc">Worker entered restricted robotic cell.</span>
+        </div>
+      </div>
+      <button class="btn-toast-intercept" id="btn-toast-intercept">DEEP-LINK</button>
+      <button class="btn-toast-close" id="btn-dismiss-toast">✕</button>
+    </aside>
+
+    <!-- =======================================================================
+         VIEW 1: LIVE MONITOR (High-Density Spatial Surveillance)
+         ======================================================================= -->
+    <section class="main-page-panel active" id="page-live">
+      <div class="live-surveillance-grid">
+        
+        <!-- Video Card -->
+        <div class="surveillance-card">
+          <div class="surveillance-toolbar">
+            <div class="toolbar-camera-meta">
+              <span class="cam-tag">NODE: CAM_FACILITY_BAY_01</span>
+              <span class="cam-fps-meta">1080p @ 60 FPS • NvDCF Multi-Object Tracking</span>
+            </div>
+
+            <!-- Segmented Switch Tabs for Controls -->
+            <div class="toolbar-switch-controls">
+              <div class="segmented-switch-group">
+                <button class="switch-btn active" id="switch-source-sim">Simulated Stream</button>
+                <button class="switch-btn" id="switch-source-cam">Local Webcam</button>
+              </div>
+
+              <div class="toggle-pill-group">
+                <button class="pill-toggle active" id="btn-toggle-zones">Zones: ON</button>
+                <button class="pill-toggle active" id="btn-toggle-bboxes">Boxes: ON</button>
+              </div>
+            </div>
           </div>
-          <div class="action-btn-row">
+
+          <!-- Video Viewport Canvas -->
+          <div class="video-canvas-container" id="video-canvas-wrapper">
+            <canvas id="sentinel-canvas" width="1280" height="720"></canvas>
+            <video id="webcam-video" playsinline autoplay muted style="display: none;"></video>
+
+            <!-- Floating Minimalist HUD -->
+            <div class="canvas-floating-hud">
+              <div class="hud-mono-tag">ENGINE: <b>TensorRT INT8</b></div>
+              <div class="hud-mono-tag">LATENCY: <b id="hud-latency">7.8 ms</b></div>
+              <div class="hud-mono-tag">FPS: <b id="hud-fps">60.2</b></div>
+            </div>
+
+            <div class="canvas-legend-strip">
+              <span class="legend-badge">▨ RESTRICTED ZONE (ROBOT CELL)</span>
+              <span class="legend-badge">□ CAUTION ZONE (PPE MANDATORY)</span>
+            </div>
+          </div>
+
+          <!-- Decluttered 4-Metric Telemetry Bar -->
+          <div class="telemetry-four-bar">
+            <div class="telem-item">
+              <span class="t-label">Active Workers</span>
+              <span class="t-value" id="metric-workers">4</span>
+              <span class="t-sub">Tracked by NvDCF</span>
+            </div>
+            <div class="telem-item">
+              <span class="t-label">Helmet Compliance</span>
+              <span class="t-value" id="metric-compliance">96.4%</span>
+              <span class="t-sub">Spatial Association</span>
+            </div>
+            <div class="telem-item">
+              <span class="t-label">Active Breaches</span>
+              <span class="t-value text-invert" id="metric-breaches">0</span>
+              <span class="t-sub">Zero-Tolerance Logic</span>
+            </div>
+            <div class="telem-item">
+              <span class="t-label">Actionable Pipe</span>
+              <span class="t-value">MQTT / JSON</span>
+              <span class="t-sub">workplace/safety/alerts</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time Activity Rail -->
+        <aside class="activity-rail-card">
+          <div class="rail-header-box">
+            <span class="rail-title">Live Alert Stream</span>
+            <span class="rail-live-badge">REAL-TIME</span>
+          </div>
+
+          <div class="rail-stream-feed" id="rail-incident-feed">
+            <div class="rail-empty-box" id="rail-empty">
+              <span class="empty-icon">○</span>
+              <span class="empty-title">All Zones Secure</span>
+              <span class="empty-desc">Monitoring GStreamer pad probe events in real-time</span>
+            </div>
+          </div>
+
+          <div class="rail-footer-action">
+            <button class="btn-rail-link" data-nav-target="page-incidents">View Complete Audit Log ➔</button>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 2: NODE MATRIX (Multi-Node Scalability)
+         ======================================================================= -->
+    <section class="main-page-panel" id="page-matrix">
+      <div class="content-wrapper-card">
+        <div class="panel-header-row">
+          <div>
+            <h2 class="panel-title">Edge Perception Node Matrix</h2>
+            <p class="panel-subtitle">Multi-camera cluster managed via PipeGen pipeline and DeepStream streammux.</p>
+          </div>
+          <button class="btn-mono-secondary" id="btn-refresh-nodes">Poll Node Telemetry</button>
+        </div>
+
+        <div class="node-matrix-grid">
+          <div class="node-box active-node">
+            <div class="node-box-top">
+              <span class="node-id-tag">CAM_BAY_01 (PRIMARY)</span>
+              <span class="node-live-status">● LIVE INFERENCE</span>
+            </div>
+            <div class="node-box-title">Robotic Assembly Cell & Corridor</div>
+            <div class="node-metric-strip">
+              <span>FPS: <b>60.2</b></span>
+              <span>Latency: <b>7.8 ms</b></span>
+              <span>Workers: <b>4</b></span>
+            </div>
+            <button class="btn-node-inspect" data-nav-target="page-live">Switch to Live Stream ➔</button>
+          </div>
+
+          <div class="node-box">
+            <div class="node-box-top">
+              <span class="node-id-tag">CAM_BAY_02</span>
+              <span class="node-live-status">● ACTIVE</span>
+            </div>
+            <div class="node-box-title">Heavy Forklift Loading Dock</div>
+            <div class="node-metric-strip">
+              <span>FPS: <b>59.8</b></span>
+              <span>Latency: <b>8.1 ms</b></span>
+              <span>Workers: <b>2</b></span>
+            </div>
+            <button class="btn-node-inspect">Stream Available</button>
+          </div>
+
+          <div class="node-box">
+            <div class="node-box-top">
+              <span class="node-id-tag">CAM_BAY_03</span>
+              <span class="node-live-status">● ACTIVE</span>
+            </div>
+            <div class="node-box-title">Chemical Storage & PPE Corridor</div>
+            <div class="node-metric-strip">
+              <span>FPS: <b>60.0</b></span>
+              <span>Latency: <b>7.9 ms</b></span>
+              <span>Workers: <b>1</b></span>
+            </div>
+            <button class="btn-node-inspect">Stream Available</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         VIEW 3: INCIDENT LOGS & AUDIT TRAIL
+         ======================================================================= -->
+    <section class="main-page-panel" id="page-incidents">
+      <div class="content-wrapper-card">
+        <div class="panel-header-row">
+          <div>
+            <h2 class="panel-title">Incident Audit Trail & JSON Logging</h2>
+            <p class="panel-subtitle">Structured safety events logged to <code>/home/incidents.jsonl</code> by DeepStream probe.</p>
+          </div>
+          <div class="action-btn-cluster">
             <button class="btn-mono-secondary" id="btn-export-json">Export JSONL</button>
             <button class="btn-mono-secondary" id="btn-clear-incidents">Clear View</button>
           </div>
         </div>
 
-        <!-- Filter Segmented Tabs & Search -->
-        <div class="table-controls-bar">
+        <div class="table-filter-toolbar">
           <div class="segmented-pill-tabs" role="tablist">
             <button class="filter-tab active" data-filter="all">All Events</button>
             <button class="filter-tab" data-filter="CRITICAL">Critical Intrusions</button>
             <button class="filter-tab" data-filter="PPE">Missing Helmets</button>
           </div>
 
-          <div class="mono-search-box">
-            <input type="text" id="incident-search-input" placeholder="Search by ID, zone, or event type...">
+          <div class="search-input-box">
+            <input type="text" id="incident-search-input" placeholder="Search by Worker ID, Zone, or Event...">
           </div>
         </div>
 
-        <!-- Minimalist Table -->
         <div class="table-frame">
           <table class="mono-data-table">
             <thead>
               <tr>
                 <th>Event ID</th>
-                <th>Timestamp (UTC)</th>
+                <th>Time (UTC)</th>
                 <th>Worker ID</th>
                 <th>Violation Type</th>
                 <th>Severity</th>
@@ -222,44 +378,42 @@
           </table>
         </div>
       </div>
-    </div>
-  </main>
+    </section>
 
-  <!-- =======================================================================
-       PAGE 3: TENSORRT SPEED & BENCHMARK REPORT
-       ======================================================================= -->
-  <main class="page-view" id="page-benchmarks">
-    <div class="mono-container">
-      <div class="mono-card benchmark-section">
-        <div class="section-heading-bar">
+    <!-- =======================================================================
+         VIEW 4: TENSORRT SPEED & BENCHMARK REPORT
+         ======================================================================= -->
+    <section class="main-page-panel" id="page-benchmarks">
+      <div class="content-wrapper-card">
+        <div class="panel-header-row">
           <div>
-            <span class="mono-tag">TRACK A EVIDENCE • MANDATORY</span>
-            <h2 class="section-title">TensorRT Engine Speed & Quantization Report</h2>
-            <p class="section-sub">Benchmark results generated via PipeGen Compiler and <code>trtexec</code> on YOLOv8s-PPE.</p>
+            <span class="mono-badge">OFFICIAL TRACK A EVIDENCE</span>
+            <h2 class="panel-title">TensorRT Engine Speed & Quantization Report</h2>
+            <p class="panel-subtitle">Benchmark metrics generated via PipeGen Compiler and <code>trtexec</code> on YOLOv8s-PPE.</p>
           </div>
           <button class="btn-mono-secondary" id="btn-copy-bench-json">Copy Evidence JSON for Google Form</button>
         </div>
 
         <!-- 3 Big Metric Cards -->
-        <div class="mono-kpi-row">
-          <div class="kpi-box">
-            <span class="kpi-title">Throughput Speedup</span>
-            <span class="kpi-number">3.44x</span>
-            <span class="kpi-caption">TensorRT INT8 vs FP32 Baseline</span>
+        <div class="kpi-three-grid">
+          <div class="kpi-card-box">
+            <span class="kpi-card-label">Throughput Speedup</span>
+            <span class="kpi-card-val">3.44x</span>
+            <span class="kpi-card-sub">TensorRT INT8 vs FP32 Baseline</span>
           </div>
-          <div class="kpi-box">
-            <span class="kpi-title">Inference Latency</span>
-            <span class="kpi-number">7.8 ms</span>
-            <span class="kpi-caption">Sub-10ms Real-Time Edge Processing</span>
+          <div class="kpi-card-box">
+            <span class="kpi-card-label">Inference Latency</span>
+            <span class="kpi-card-val">7.8 ms</span>
+            <span class="kpi-card-sub">Sub-10ms Real-Time Edge Processing</span>
           </div>
-          <div class="kpi-box">
-            <span class="kpi-title">VRAM Footprint</span>
-            <span class="kpi-number">540 MB</span>
-            <span class="kpi-caption">70% Memory Reduction (Low Power Jetson)</span>
+          <div class="kpi-card-box">
+            <span class="kpi-card-label">GPU Memory Footprint</span>
+            <span class="kpi-card-val">540 MB</span>
+            <span class="kpi-card-sub">70% VRAM Reduction (Ideal for Jetson)</span>
           </div>
         </div>
 
-        <!-- Comparative Table -->
+        <!-- Comparative Benchmark Table -->
         <div class="table-frame" style="margin-top: 24px;">
           <table class="mono-data-table">
             <thead>
@@ -267,14 +421,14 @@
                 <th>Precision / Engine</th>
                 <th>Latency (ms)</th>
                 <th>Throughput (FPS)</th>
-                <th>Memory (VRAM)</th>
+                <th>VRAM Footprint</th>
                 <th>Speedup</th>
                 <th>Deployment Target</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><span class="mono-pill-badge">FP32 (ONNX Runtime)</span></td>
+                <td><span class="mono-tag-pill">FP32 (ONNX Runtime)</span></td>
                 <td>26.8 ms</td>
                 <td>37.3 FPS</td>
                 <td>1,840 MB</td>
@@ -282,7 +436,7 @@
                 <td>Workstation Host</td>
               </tr>
               <tr class="row-highlight">
-                <td><span class="mono-pill-badge badge-active">TensorRT FP16</span></td>
+                <td><span class="mono-tag-pill tag-bordered">TensorRT FP16</span></td>
                 <td>11.4 ms</td>
                 <td>87.7 FPS</td>
                 <td>920 MB</td>
@@ -290,7 +444,7 @@
                 <td>Edge GPU Desktop</td>
               </tr>
               <tr class="row-highlight">
-                <td><span class="mono-pill-badge badge-invert">TensorRT INT8 Quantized ★</span></td>
+                <td><span class="mono-tag-pill tag-inverted">TensorRT INT8 Quantized ★</span></td>
                 <td><b>7.8 ms</b></td>
                 <td><b>128.2 FPS</b></td>
                 <td><b>540 MB</b></td>
@@ -301,125 +455,117 @@
           </table>
         </div>
 
-        <!-- Minimalist Visual Comparison Bars -->
-        <div class="bars-container">
+        <!-- Visual Bar Comparison -->
+        <div class="bars-visual-box">
           <div class="bar-unit">
-            <div class="bar-header"><span>FP32 Base</span><span>37.3 FPS</span></div>
-            <div class="bar-track"><div class="bar-fill bar-muted" style="width: 29%;"></div></div>
+            <div class="bar-label-row"><span>FP32 Base (ONNX Runtime)</span><span>37.3 FPS</span></div>
+            <div class="bar-track"><div class="bar-fill fill-dim" style="width: 29%;"></div></div>
           </div>
           <div class="bar-unit">
-            <div class="bar-header"><span>TensorRT FP16</span><span>87.7 FPS (2.35x)</span></div>
-            <div class="bar-track"><div class="bar-fill bar-mid" style="width: 68%;"></div></div>
+            <div class="bar-label-row"><span>TensorRT FP16 Engine</span><span>87.7 FPS (2.35x)</span></div>
+            <div class="bar-track"><div class="bar-fill fill-mid" style="width: 68%;"></div></div>
           </div>
           <div class="bar-unit">
-            <div class="bar-header"><span>TensorRT INT8 (Edge Optimization Bonus)</span><span>128.2 FPS (3.44x)</span></div>
-            <div class="bar-track"><div class="bar-fill bar-white" style="width: 100%;"></div></div>
+            <div class="bar-label-row"><span>TensorRT INT8 (Edge Optimization Bonus)</span><span>128.2 FPS (3.44x)</span></div>
+            <div class="bar-track"><div class="bar-fill fill-white" style="width: 100%;"></div></div>
           </div>
         </div>
-
       </div>
-    </div>
-  </main>
+    </section>
 
-  <!-- =======================================================================
-       PAGE 4: PIPEGEN 5-STAGE ARCHITECTURE
-       ======================================================================= -->
-  <main class="page-view" id="page-pipeline">
-    <div class="mono-container">
-      <div class="mono-card">
-        <div class="section-heading-bar">
+    <!-- =======================================================================
+         VIEW 5: PIPEGEN 5-STAGE ARCHITECTURE
+         ======================================================================= -->
+    <section class="main-page-panel" id="page-pipeline">
+      <div class="content-wrapper-card">
+        <div class="panel-header-row">
           <div>
-            <span class="mono-tag">CRAFTIFAI WORKFLOW</span>
-            <h2 class="section-title">PipeGen 5-Stage Architecture Flow</h2>
-            <p class="section-sub">Step-by-step pipeline progression from natural language prompt to deployed DeepStream app.</p>
+            <span class="mono-badge">CRAFTIFAI WORKFLOW</span>
+            <h2 class="panel-title">PipeGen 5-Stage Architecture Flow</h2>
+            <p class="panel-subtitle">Formal progression through CraftifAI PipeGen v0.5.1 from requirement to deployed DeepStream app.</p>
           </div>
         </div>
 
-        <!-- 5 Stage Grid -->
-        <div class="stage-timeline">
-          <div class="stage-item">
-            <div class="stage-index">01</div>
+        <div class="stage-five-grid">
+          <div class="stage-box">
+            <div class="stage-num">01</div>
             <h3 class="stage-title">Requirement</h3>
-            <p class="stage-summary">Natural language prompt specifying 1080p camera stream, YOLOv8 model, worker-helmet spatial association, and MQTT output.</p>
-            <div class="file-tag">pipegen/01_requirement_prompt.txt</div>
+            <p class="stage-text">Natural language prompt specifying 1080p camera stream, YOLOv8 model, worker-helmet spatial association, and MQTT output.</p>
+            <div class="stage-code-tag">pipegen/01_requirement_prompt.txt</div>
           </div>
 
-          <div class="stage-item">
-            <div class="stage-index">02</div>
+          <div class="stage-box">
+            <div class="stage-num">02</div>
             <h3 class="stage-title">Pipeline IR</h3>
-            <p class="stage-summary">GStreamer node graph: <code>v4l2src</code> → <code>nvstreammux</code> → <code>nvinfer</code> → <code>nvtracker</code> → <code>hazard_zone_probe</code> → <code>sinks</code>.</p>
-            <div class="file-tag">pipegen/02_pipeline_ir_spec.json</div>
+            <p class="stage-text">GStreamer node graph: <code>v4l2src</code> → <code>nvstreammux</code> → <code>nvinfer</code> → <code>nvtracker</code> → <code>hazard_zone_probe</code> → <code>sinks</code>.</p>
+            <div class="stage-code-tag">pipegen/02_pipeline_ir_spec.json</div>
           </div>
 
-          <div class="stage-item">
-            <div class="stage-index">03</div>
+          <div class="stage-box">
+            <div class="stage-num">03</div>
             <h3 class="stage-title">Model Catalog</h3>
-            <p class="stage-summary">YOLOv8s-PPE detector trained on person, hardhat, and safety-vest detection at 640×640 input resolution.</p>
-            <div class="file-tag">pipegen/03_model_config.txt</div>
+            <p class="stage-text">YOLOv8s-PPE detector trained on person, hardhat, and safety-vest detection at 640×640 input resolution.</p>
+            <div class="stage-code-tag">pipegen/03_model_config.txt</div>
           </div>
 
-          <div class="stage-item">
-            <div class="stage-index">04</div>
+          <div class="stage-box">
+            <div class="stage-num">04</div>
             <h3 class="stage-title">Compiler</h3>
-            <p class="stage-summary">Compiling ONNX to TensorRT engines with FP16 precision and INT8 calibration for maximum edge throughput.</p>
-            <div class="file-tag">pipegen/04_tensorrt_compile.sh</div>
+            <p class="stage-text">Compiling ONNX to TensorRT engines with FP16 precision and INT8 calibration for maximum edge throughput.</p>
+            <div class="stage-code-tag">pipegen/04_tensorrt_compile.sh</div>
           </div>
 
-          <div class="stage-item">
-            <div class="stage-index">05</div>
+          <div class="stage-box">
+            <div class="stage-num">05</div>
             <h3 class="stage-title">DeepStream Run</h3>
-            <p class="stage-summary">Executing multi-sink DeepStream app with live video overlay, local JSONL incident logs, and MQTT event broker.</p>
-            <div class="file-tag">pipegen/05_deepstream_run.sh</div>
+            <p class="stage-text">Executing multi-sink DeepStream app with live video overlay, local JSONL incident logs, and MQTT event broker.</p>
+            <div class="stage-code-tag">pipegen/05_deepstream_run.sh</div>
           </div>
         </div>
 
-        <!-- Linear Flow Diagram -->
-        <div class="linear-flow-box">
-          <span class="flow-step">Camera Source</span>
-          <span class="flow-arrow">→</span>
-          <span class="flow-step">nvstreammux</span>
-          <span class="flow-arrow">→</span>
-          <span class="flow-step highlight-step">TensorRT Engine</span>
-          <span class="flow-arrow">→</span>
-          <span class="flow-step">nvtracker (NvDCF)</span>
-          <span class="flow-arrow">→</span>
-          <span class="flow-step highlight-step">Safety Probe</span>
-          <span class="flow-arrow">→</span>
-          <span class="flow-step">MQTT + JSONL Sinks</span>
+        <!-- Node Pipeline Sequence -->
+        <div class="linear-pipeline-strip">
+          <span class="strip-step">Camera Input</span>
+          <span class="strip-arrow">→</span>
+          <span class="strip-step">nvstreammux</span>
+          <span class="strip-arrow">→</span>
+          <span class="strip-step step-invert">TensorRT nvinfer</span>
+          <span class="strip-arrow">→</span>
+          <span class="strip-step">nvtracker (NvDCF)</span>
+          <span class="strip-arrow">→</span>
+          <span class="strip-step step-invert">Hazard Zone Probe</span>
+          <span class="strip-arrow">→</span>
+          <span class="strip-step">MQTT + JSONL Sinks</span>
         </div>
-
       </div>
-    </div>
-  </main>
+    </section>
 
-  <!-- =======================================================================
-       PAGE 5: ESP32 HARDWARE CLOSED LOOP
-       ======================================================================= -->
-  <main class="page-view" id="page-hardware">
-    <div class="mono-container">
-      <div class="mono-card">
-        <div class="section-heading-bar">
+    <!-- =======================================================================
+         VIEW 6: ESP32 HARDWARE CLOSED LOOP
+         ======================================================================= -->
+    <section class="main-page-panel" id="page-hardware">
+      <div class="content-wrapper-card">
+        <div class="panel-header-row">
           <div>
-            <span class="mono-tag">CLOSED-LOOP BONUS PRIZE</span>
-            <h2 class="section-title">Physical AI Actuator Node (ESP32)</h2>
-            <p class="section-sub">Edge perception events from PipeGen trigger physical actuators in real-time over MQTT.</p>
+            <span class="mono-badge">CLOSED LOOP BONUS</span>
+            <h2 class="panel-title">Physical AI Actuator Node (ESP32)</h2>
+            <p class="panel-subtitle">Real-time perception-to-actuation bridge over MQTT via Wi-Fi.</p>
           </div>
         </div>
 
-        <div class="hardware-two-col">
-          <!-- Col 1: Hardware Specs -->
+        <div class="hw-split-grid">
           <div class="hw-col-card">
-            <h3 class="hw-col-title">Microcontroller Configuration</h3>
-            <div class="hw-detail-list">
-              <div class="detail-item"><span class="k">Board</span><span class="v">ESP32-WROOM-32D (ESP-IDF v5.5)</span></div>
-              <div class="detail-item"><span class="k">Protocol</span><span class="v">MQTT over 2.4GHz Wi-Fi</span></div>
-              <div class="detail-item"><span class="k">Subscribed Topic</span><span class="v"><code>workplace/safety/alerts</code></span></div>
-              <div class="detail-item"><span class="k">Physical Actuators</span><span class="v">Piezo Siren (2.4kHz) + Red Strobe LED + Cutoff Relay</span></div>
-              <div class="detail-item"><span class="k">Firmware File</span><span class="v"><code>closed_loop_esp32/esp32_safety_alarm.ino</code></span></div>
+            <h3 class="hw-col-title">Microcontroller Specification</h3>
+            <div class="hw-spec-rows">
+              <div class="spec-line"><span class="k">Board</span><span class="v">ESP32-WROOM-32D (ESP-IDF v5.5)</span></div>
+              <div class="spec-line"><span class="k">Protocol</span><span class="v">MQTT over 2.4GHz Wi-Fi</span></div>
+              <div class="spec-line"><span class="k">Subscribed Topic</span><span class="v"><code>workplace/safety/alerts</code></span></div>
+              <div class="spec-line"><span class="k">Actuator Hardware</span><span class="v">Piezo Siren (2.4kHz) + Red Strobe LED + Cutoff Relay</span></div>
+              <div class="spec-line"><span class="k">Firmware File</span><span class="v"><code>closed_loop_esp32/esp32_safety_alarm.ino</code></span></div>
             </div>
 
-            <div class="code-box">
-              <span class="code-label">MQTT Message Payload:</span>
+            <div class="hw-payload-preview">
+              <span class="preview-label">Live Ingested MQTT Payload Schema:</span>
               <pre><code>{
   "camera_id": "CAM_FACILITY_BAY_01",
   "worker_id": "WORKER-102",
@@ -430,33 +576,32 @@
             </div>
           </div>
 
-          <!-- Col 2: Test Switches -->
           <div class="hw-col-card">
             <h3 class="hw-col-title">Physical Actuator Controls</h3>
-            <p class="hw-desc">Simulate physical actuator triggers to verify real-time response during judging demonstration.</p>
+            <p class="hw-col-desc">Trigger test events from the dashboard to demonstrate physical actuator reactions for hackathon judges.</p>
 
-            <div class="switch-button-list">
-              <button class="btn-hw-switch" id="btn-hw-safe">
-                <span class="hw-btn-name">Send Normal Heartbeat (Safe)</span>
-                <span class="hw-btn-sub">Green LED stays active</span>
+            <div class="hw-btn-group">
+              <button class="btn-actuator-pill" id="btn-hw-safe">
+                <span class="act-name">Send Normal Safe Heartbeat</span>
+                <span class="act-sub">Green LED stays active</span>
               </button>
 
-              <button class="btn-hw-switch" id="btn-hw-warn">
-                <span class="hw-btn-name">Simulate Missing Helmet Alert</span>
-                <span class="hw-btn-sub">Periodic strobe + soft warning beep</span>
+              <button class="btn-actuator-pill" id="btn-hw-warn">
+                <span class="act-name">Simulate Missing Helmet Warning</span>
+                <span class="act-sub">Yellow warning pulse + periodic soft chirp</span>
               </button>
 
-              <button class="btn-hw-switch btn-hw-critical" id="btn-hw-danger">
-                <span class="hw-btn-name">Trigger Emergency Alarm Cutoff</span>
-                <span class="hw-btn-sub">High-speed strobe + 2.4kHz siren + motor relay trip</span>
+              <button class="btn-actuator-pill act-danger" id="btn-hw-danger">
+                <span class="act-name">Trigger Emergency Alarm Cutoff</span>
+                <span class="act-sub">High-speed strobe + 2.4kHz siren + motor relay trip</span>
               </button>
             </div>
           </div>
         </div>
-
       </div>
-    </div>
-  </main>
+    </section>
+
+  </div>
 
   <script src="js/app.js"></script>
 </body>

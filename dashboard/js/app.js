@@ -1,7 +1,9 @@
 /**
- * SafetySentinel AI - Minimalist Black & White Controller
- * Handles tactile segmented switch tabs, monochrome canvas rendering,
- * spatial zone collision, incident table filtering, and hardware triggers.
+ * SafetySentinel AI - Persistent Sidebar & Event-Driven Alert Intercept Controller
+ * Implements:
+ * 1. Persistent Collapsible Left Sidebar (full labels to compact icons)
+ * 2. Event-Driven Alert Intercept (Universal Top Banner with direct live-feed deep-link)
+ * 3. Minimalist B&W Canvas Simulation & Telemetry Stream
  */
 
 // Global State
@@ -12,6 +14,7 @@ const appState = {
   showBBoxes: true,
   activeFilter: 'all',
   searchQuery: '',
+  sidebarCollapsed: false,
   incidents: [],
   workers: [
     { id: 101, x: 220, y: 390, vx: 0.8, vy: 0.4, ppe: { helmet: true, vest: true } },
@@ -21,7 +24,7 @@ const appState = {
   ]
 };
 
-// Spatial Hazard Zones (Monochrome definitions)
+// Spatial Hazard Zones
 const ZONES = [
   {
     id: "ZONE_ROBOTIC_CELL",
@@ -47,6 +50,15 @@ const ZONES = [
   }
 ];
 
+const VIEW_TITLES = {
+  'page-live': 'Live Perception Feed',
+  'page-matrix': 'Perception Node Matrix',
+  'page-incidents': 'Incident Audit Trail',
+  'page-benchmarks': 'TensorRT Performance Report',
+  'page-pipeline': 'PipeGen 5-Stage Architecture Flow',
+  'page-hardware': 'ESP32 Physical Actuator Node'
+};
+
 // Web Audio Tone Synthesizer
 let audioCtx = null;
 function playAlertTone(isCritical = true) {
@@ -69,7 +81,7 @@ function playAlertTone(isCritical = true) {
     osc.start();
     osc.stop(audioCtx.currentTime + 0.22);
   } catch (e) {
-    console.warn("Audio Context waiting for user gesture:", e);
+    console.warn("Audio Context waiting for interaction:", e);
   }
 }
 
@@ -110,11 +122,10 @@ function renderCanvas() {
 }
 
 function drawMonochromeFactoryScene() {
-  // Pure matte black background
   ctx.fillStyle = '#050505';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Subtle architectural grid
+  // Perspective floor grid
   ctx.strokeStyle = '#181818';
   ctx.lineWidth = 1;
   for (let x = 0; x < canvas.width; x += 80) {
@@ -137,7 +148,7 @@ function drawMonochromeFactoryScene() {
   ctx.strokeRect(630, 360, 160, 110);
 
   ctx.fillStyle = '#ffffff';
-  ctx.fillRect(700, 340, 20, 20); // White Status Beacon
+  ctx.fillRect(700, 340, 20, 20);
 
   ctx.fillStyle = '#666666';
   ctx.font = '10px JetBrains Mono';
@@ -153,18 +164,15 @@ function drawMonochromeHazardZones() {
     }
     ctx.closePath();
 
-    // Subtle monochrome fill
     ctx.fillStyle = zone.type === 'RESTRICTED' ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 255, 255, 0.03)';
     ctx.fill();
 
-    // High contrast white stroke
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = zone.type === 'RESTRICTED' ? 2 : 1;
     ctx.setLineDash(zone.type === 'RESTRICTED' ? [8, 5] : [3, 3]);
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Minimalist zone tag
     const lx = zone.polygon[0].x + 10;
     const ly = zone.polygon[0].y + 20;
     ctx.fillStyle = '#000000';
@@ -206,7 +214,7 @@ function updateAndDrawWorkers() {
         isViolating = true;
         label = `ID #${w.id} [BREACH: CELL]`;
         activeBreaches++;
-        recordIncident({
+        triggerHazardBreach({
           workerId: `WORKER-${w.id}`,
           type: 'ZONE_INTRUSION',
           severity: 'CRITICAL',
@@ -218,13 +226,13 @@ function updateAndDrawWorkers() {
         isViolating = true;
         label = `ID #${w.id} [NO HELMET]`;
         activeBreaches++;
-        recordIncident({
+        triggerHazardBreach({
           workerId: `WORKER-${w.id}`,
           type: 'MISSING_PPE_HARDHAT',
           severity: 'HIGH',
           zone: inZone.name,
           action: 'WARNING_STROBE_CHIRP',
-          message: `Worker #${w.id} missing helmet in transit corridor!`
+          message: `Worker #${w.id} missing safety helmet in transit corridor!`
         });
       }
     }
@@ -235,11 +243,10 @@ function updateAndDrawWorkers() {
       const boxX = w.x - boxW / 2;
       const boxY = w.y - 25;
 
-      ctx.strokeStyle = isViolating ? '#ffffff' : '#777777';
+      ctx.strokeStyle = isViolating ? '#ffffff' : '#666666';
       ctx.lineWidth = isViolating ? 2 : 1;
       ctx.strokeRect(boxX, boxY, boxW, boxH);
 
-      // Inverted badge
       ctx.fillStyle = isViolating ? '#ffffff' : '#222222';
       ctx.fillRect(boxX - 1, boxY - 18, ctx.measureText(label).width + 10, 17);
       ctx.fillStyle = isViolating ? '#000000' : '#ffffff';
@@ -251,12 +258,14 @@ function updateAndDrawWorkers() {
   document.getElementById('metric-breaches').textContent = activeBreaches;
 }
 
-// Incident Dispatcher
-let lastAlertTimestamp = 0;
-function recordIncident(incident) {
+// ==============================================================================
+// PATTERN 2: EVENT-DRIVEN ALERT INTERCEPT LOGIC
+// ==============================================================================
+let lastBreachTimestamp = 0;
+function triggerHazardBreach(incident) {
   const now = Date.now();
-  if (now - lastAlertTimestamp < 3000) return;
-  lastAlertTimestamp = now;
+  if (now - lastBreachTimestamp < 3500) return; // Prevent flooding
+  lastBreachTimestamp = now;
 
   const eventRecord = {
     id: `EVT-${Math.floor(Math.random() * 90000 + 10000)}`,
@@ -267,18 +276,69 @@ function recordIncident(incident) {
   appState.incidents.unshift(eventRecord);
   if (appState.incidents.length > 50) appState.incidents.pop();
 
-  document.getElementById('nav-incident-count').textContent = appState.incidents.length;
+  document.getElementById('sidebar-incident-count').textContent = appState.incidents.length;
   renderRailFeed();
   renderIncidentsTable();
 
-  // Show Toast
+  // 1. Show Universal Top Alert Intercept Banner (Appears across ALL views)
+  const interceptBanner = document.getElementById('universal-alert-intercept');
+  const interceptText = document.getElementById('intercept-text');
+  interceptText.textContent = `${incident.severity}: ${incident.message}`;
+  interceptBanner.style.display = 'flex';
+
+  // 2. Secondary Toast
   const toast = document.getElementById('mono-toast');
   document.getElementById('toast-title').textContent = `${eventRecord.severity}: ${eventRecord.type}`;
   document.getElementById('toast-desc').textContent = eventRecord.message;
   toast.style.display = 'flex';
-  setTimeout(() => { toast.style.display = 'none'; }, 4000);
+  setTimeout(() => { toast.style.display = 'none'; }, 4500);
 
   playAlertTone(eventRecord.severity === 'CRITICAL');
+}
+
+/**
+ * Deep-link Intercept Action:
+ * Minimises time-to-response. Instantly bypasses menus and brings the operator
+ * directly into the live node view, focusing the offending camera.
+ */
+function interceptAndFocusLiveView() {
+  // 1. Force navigation to Live Feeds
+  navigateToPage('page-live');
+
+  // 2. Hide intercept banner after deep-linking
+  document.getElementById('universal-alert-intercept').style.display = 'none';
+
+  // 3. Highlight camera viewport with an emergency focus outline
+  const wrapper = document.getElementById('video-canvas-wrapper');
+  wrapper.classList.add('focused-intrusion');
+  setTimeout(() => {
+    wrapper.classList.remove('focused-intrusion');
+  }, 3500);
+
+  // 4. Scroll viewport into focus
+  wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function navigateToPage(targetPageId) {
+  // Update sidebar active buttons
+  document.querySelectorAll('.nav-item-btn').forEach(btn => {
+    const isTarget = btn.getAttribute('data-nav-target') === targetPageId;
+    btn.classList.toggle('active', isTarget);
+    btn.setAttribute('aria-selected', isTarget);
+  });
+
+  // Switch visible panels
+  document.querySelectorAll('.main-page-panel').forEach(panel => {
+    panel.classList.toggle('active', panel.id === targetPageId);
+  });
+
+  // Update top breadcrumb title
+  const titleElem = document.getElementById('view-current-title');
+  if (titleElem && VIEW_TITLES[targetPageId]) {
+    titleElem.textContent = VIEW_TITLES[targetPageId];
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function renderRailFeed() {
@@ -295,12 +355,12 @@ function renderRailFeed() {
   empty.style.display = 'none';
   const recent = appState.incidents.slice(0, 6);
   railContainer.innerHTML = recent.map(inc => `
-    <div class="mono-event-card">
-      <div class="card-time-row">
-        <span class="card-event-badge">${inc.type}</span>
+    <div class="rail-event-item" onclick="interceptAndFocusLiveView()">
+      <div class="event-meta-line">
+        <span class="event-badge">${inc.type}</span>
         <span>${inc.time}</span>
       </div>
-      <div class="card-event-text">${inc.message}</div>
+      <div class="event-text">${inc.message}</div>
     </div>
   `).join('');
 }
@@ -333,37 +393,58 @@ function renderIncidentsTable() {
       <td><b>${inc.id}</b></td>
       <td>${inc.time}</td>
       <td>${inc.workerId}</td>
-      <td><span class="mono-pill-badge">${inc.type}</span></td>
+      <td><span class="mono-tag-pill">${inc.type}</span></td>
       <td style="font-weight: 700;">${inc.severity}</td>
       <td>${inc.zone}</td>
-      <td><span class="mono-pill-badge">${inc.action}</span></td>
+      <td><span class="mono-tag-pill">${inc.action}</span></td>
     </tr>
   `).join('');
 }
 
-// Setup Event Handlers
-function setupControls() {
-  // 1. Primary Segmented Switch Tabs (Page routing)
-  const switchTabs = document.querySelectorAll('.switch-tab, [data-tab-target]');
-  switchTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const targetId = tab.getAttribute('data-tab-target');
+// Setup Event Listeners
+function setupEventListeners() {
+  // 1. Persistent Sidebar Collapse Toggle
+  const sidebar = document.getElementById('app-sidebar');
+  const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
+  btnToggleSidebar.addEventListener('click', () => {
+    appState.sidebarCollapsed = !appState.sidebarCollapsed;
+    sidebar.classList.toggle('sidebar-collapsed', appState.sidebarCollapsed);
+  });
 
-      document.querySelectorAll('.switch-tab').forEach(t => {
-        const isMatch = t.getAttribute('data-tab-target') === targetId;
-        t.classList.toggle('active', isMatch);
-        t.setAttribute('aria-selected', isMatch);
-      });
-
-      document.querySelectorAll('.page-view').forEach(p => {
-        p.classList.toggle('active', p.id === targetId);
-      });
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  // 2. Navigation items
+  document.querySelectorAll('[data-nav-target]').forEach(item => {
+    item.addEventListener('click', () => {
+      const targetId = item.getAttribute('data-nav-target');
+      navigateToPage(targetId);
     });
   });
 
-  // 2. Video Source Switch Tabs
+  // 3. Universal Top Alert Intercept Actions
+  document.getElementById('btn-intercept-deeplink').addEventListener('click', interceptAndFocusLiveView);
+  document.getElementById('btn-toast-intercept').addEventListener('click', interceptAndFocusLiveView);
+
+  document.getElementById('btn-intercept-mute').addEventListener('click', () => {
+    document.getElementById('universal-alert-intercept').style.display = 'none';
+  });
+
+  document.getElementById('btn-dismiss-toast').addEventListener('click', () => {
+    document.getElementById('mono-toast').style.display = 'none';
+  });
+
+  // 4. Manual Breach Simulation
+  document.getElementById('btn-demo-breach').addEventListener('click', () => {
+    appState.workers[1].x = 680;
+    appState.workers[1].y = 420;
+  });
+
+  // 5. Sound Mute Toggle
+  const btnSound = document.getElementById('btn-sound-toggle');
+  btnSound.addEventListener('click', () => {
+    appState.soundEnabled = !appState.soundEnabled;
+    btnSound.classList.toggle('muted', !appState.soundEnabled);
+  });
+
+  // 6. Camera Source Toggles
   const btnSim = document.getElementById('switch-source-sim');
   const btnCam = document.getElementById('switch-source-cam');
 
@@ -389,7 +470,7 @@ function setupControls() {
     }
   });
 
-  // 3. Toggle Switch Pills (Zones & Boxes)
+  // 7. Zones & Bounding Box Toggles
   const btnZones = document.getElementById('btn-toggle-zones');
   btnZones.addEventListener('click', () => {
     appState.showZones = !appState.showZones;
@@ -404,25 +485,7 @@ function setupControls() {
     btnBoxes.textContent = `Boxes: ${appState.showBBoxes ? 'ON' : 'OFF'}`;
   });
 
-  // 4. Test Breach
-  document.getElementById('btn-demo-breach').addEventListener('click', () => {
-    appState.workers[1].x = 680;
-    appState.workers[1].y = 420;
-  });
-
-  // 5. Dismiss Toast
-  document.getElementById('btn-dismiss-toast').addEventListener('click', () => {
-    document.getElementById('mono-toast').style.display = 'none';
-  });
-
-  // 6. Sound Toggle
-  const btnSound = document.getElementById('btn-sound-toggle');
-  btnSound.addEventListener('click', () => {
-    appState.soundEnabled = !appState.soundEnabled;
-    btnSound.classList.toggle('muted', !appState.soundEnabled);
-  });
-
-  // 7. Page 2 Incident Table Filter Switch Tabs
+  // 8. Filter Chips in Incident Logs
   document.querySelectorAll('.filter-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
@@ -439,7 +502,7 @@ function setupControls() {
 
   document.getElementById('btn-clear-incidents').addEventListener('click', () => {
     appState.incidents = [];
-    document.getElementById('nav-incident-count').textContent = '0';
+    document.getElementById('sidebar-incident-count').textContent = '0';
     renderRailFeed();
     renderIncidentsTable();
   });
@@ -455,7 +518,7 @@ function setupControls() {
     URL.revokeObjectURL(url);
   });
 
-  // 8. Copy Evidence JSON
+  // 9. Benchmark Copy
   document.getElementById('btn-copy-bench-json').addEventListener('click', function() {
     const data = {
       project: "SafetySentinel AI",
@@ -473,12 +536,12 @@ function setupControls() {
     });
   });
 
-  // 9. Hardware Controls
+  // 10. Hardware Buttons
   document.getElementById('btn-hw-safe').addEventListener('click', () => {
     playAlertTone(false);
   });
   document.getElementById('btn-hw-warn').addEventListener('click', () => {
-    recordIncident({
+    triggerHazardBreach({
       workerId: 'WORKER-104',
       type: 'MISSING_PPE_HARDHAT',
       severity: 'HIGH',
@@ -488,7 +551,7 @@ function setupControls() {
     });
   });
   document.getElementById('btn-hw-danger').addEventListener('click', () => {
-    recordIncident({
+    triggerHazardBreach({
       workerId: 'WORKER-101',
       type: 'ZONE_INTRUSION',
       severity: 'CRITICAL',
@@ -500,5 +563,5 @@ function setupControls() {
 }
 
 // Start
-setupControls();
+setupEventListeners();
 renderCanvas();
